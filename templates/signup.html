@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="mb-4">Student Registration for Event</h2>
+        {% if not confirmed %}
+            <form id="registrationForm" method="POST" action="/register">
+                <div class="form-group">
+                    <label for="fname">First Name:</label>
+                    <input type="text" class="form-control" id="fname" name="fname" required>
+                </div>
+                <div class="form-group">
+                    <label for="lname">Last Name:</label>
+                    <input type="text" class="form-control" id="lname" name="lname" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="college">College/University:</label>
+                    <input type="text" class="form-control" id="college" name="college" required>
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile:</label>
+                    <input type="tel" class="form-control" id="mobile" name="mobile" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="showConfirmation()">Submit</button>
+            </form>
+        {% else %}
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading">Registration Confirmed!</h4>
+                <p><strong>First Name:</strong> {{ fname }}</p>
+                <p><strong>Last Name:</strong> {{ lname }}</p>
+                <p><strong>Email:</strong> {{ email }}</p>
+                <p><strong>College/University:</strong> {{ college }}</p>
+                <p><strong>Mobile:</strong> {{ mobile }}</p>
+                <hr>
+                <p class="mb-0">Thank you for registering!</p>
+                <a href="/login" class="btn btn-primary mt-3">Login</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Modal for Confirmation -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirm Your Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>First Name:</strong> <span id="confirmFname"></span></p>
+                    <p><strong>Last Name:</strong> <span id="confirmLname"></span></p>
+                    <p><strong>Email:</strong> <span id="confirmEmail"></span></p>
+                    <p><strong>College/University:</strong> <span id="confirmCollege"></span></p>
+                    <p><strong>Mobile:</strong> <span id="confirmMobile"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitForm()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Function to show confirmation modal
+        function showConfirmation() {
+            // Get form values
+            const fname = $('#fname').val();
+            const lname = $('#lname').val();
+            const email = $('#email').val();
+            const college = $('#college').val();
+            const mobile = $('#mobile').val();
+
+            // Set values in modal
+            $('#confirmFname').text(fname);
+            $('#confirmLname').text(lname);
+            $('#confirmEmail').text(email);
+            $('#confirmCollege').text(college);
+            $('#confirmMobile').text(mobile);
+
+            // Show modal
+            $('#confirmationModal').modal('show');
+        }
+
+        // Function to submit form after confirmation
+        function submitForm() {
+            // Hide the modal
+            $('#confirmationModal').modal('hide');
+
+            // Submit the form
+            $('#registrationForm').submit();
+        }
+    </script>
+</body>
+</html>
