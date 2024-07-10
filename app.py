@@ -1,9 +1,7 @@
-import hashlib
-import io
 import os
 import subprocess
-import sys
 import traceback
+from datetime import datetime
 
 import pyodbc
 from flask import (Flask, flash, jsonify, redirect, render_template, request,
@@ -24,15 +22,23 @@ db = client["Problems"]
 collection = db["Statements"]
 
 # SQL Server setup
-connection_string = "Driver={ODBC Driver 17 for SQL Server};Server=RAMESH\\MSSQLSERVER01;Database=students;Trusted_Connection=yes;"
+connection_string = "Driver={ODBC Driver 17 for SQL Server};Server=RAMESH\\MSSQLSERVER02;Database=student;Trusted_Connection=yes;"
 
-
+# def time_check(curr_date):
+#     problems = list(collection.find({}))
+#     for i in problems:
+#         if str(i.schedule) != (curr_date):
+#             return False
+#         else:
+#             return True
+        
 def get_connection():
     return pyodbc.connect(connection_string)
 
 
 @app.route("/")
 def login():
+    
     return render_template("login.html")
 
 
@@ -51,14 +57,17 @@ def register():
     college = request.form.get("college")
     mobile = request.form.get("mobile")
     password = request.form.get("password")
+    con_password = request.form.get("con_password")
     password_hash = generate_password_hash(password)
+    con_password_hash = generate_password_hash(con_password)
 
+    
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT email, mobile FROM students WHERE email = ? OR mobile = ?",
+            "SELECT email, mobile FROM registrations WHERE email = ? OR mobile = ?",
             (email, mobile),
         )
         existing_user = cursor.fetchone()
@@ -68,8 +77,8 @@ def register():
             return redirect(url_for("login"))
 
         cursor.execute(
-            "INSERT INTO students (fname, lname, email, college, mobile, PasswordHash) VALUES (?, ?, ?, ?, ?, ?)",
-            (fname, lname, email, college, mobile, password_hash),
+            "INSERT INTO registrations (fname, lname, email, college, mobile, password, con_password) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (fname, lname, email, college, mobile, password_hash, con_password_hash),
         )
 
         conn.commit()
@@ -97,7 +106,7 @@ def login_post():
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT fname, PasswordHash FROM students WHERE email = ?", email
+            "SELECT fname, password FROM registrations WHERE email = ?", email
         )
         user = cursor.fetchone()
 
@@ -123,17 +132,31 @@ def add_problem_statement():
     return render_template("addps.html")
 
 
+@app.route("/not_started")
+def not_started():
+    return render_template("timer.html")
+
+
 # Route for submitting the problrm (Dynamic allocation and result evaluation)
 @app.route("/submit_problem", methods=["POST"])
 def submit_problem():
     problem_statement = request.form["problem_statement"]
+    description = request.form["description"]
+    constraints = request.form["constraints"]
     test_inputs = request.form.getlist("test_input[]")
     expected_outputs = request.form.getlist("expected_output[]")
-
+    startdate = datetime.strptime(request.form['startdate'], '%d-%m-%Y')
+    enddate = datetime.strptime(request.form['enddate'], '%d-%m-%Y')
     try:
         # Construct the document to insert into MongoDB
         document = {
             "problem_statement": problem_statement,
+            "description": description,
+            "constraints": constraints,
+            "startdate": startdate,
+            "enddate": enddate,
+            # "starttime":starttime,
+            # "endtime":endtime,
             "test_cases": [
                 {"input": test_input, "output": expected_output}
                 for test_input, expected_output in zip(test_inputs, expected_outputs)
@@ -153,6 +176,7 @@ def submit_problem():
 # Route for homepage
 @app.route("/homepage")
 def homepage():
+    # if time_check(datetime.datetime.now()) == True:
     if "user" in session:
         try:
             problems = list(collection.find({}))
@@ -165,6 +189,9 @@ def homepage():
     else:
         flash("You are not logged in.")
         return redirect(url_for("login"))
+    # else:
+    #     flash("Contest not started yet, It will start at")
+    #     return redirect(url_for("login"))
 
 
 # Logout section to close the user sessions

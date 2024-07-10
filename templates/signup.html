@@ -11,6 +11,9 @@
             max-width: 600px;
             margin-top: 50px;
         }
+        .input-group-text {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -28,7 +31,7 @@
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                    <input type="email" class="form-control" id="email" name="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                 </div>
                 <div class="form-group">
                     <label for="college">College/University:</label>
@@ -40,9 +43,27 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="input-group-append">
+                            <span class="input-group-text" onclick="togglePasswordVisibility('password', this)">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="showConfirmation()">Submit</button>
+                <div class="form-group">
+                    <label for="con_password">Confirm Password:</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="con_password" name="con_password" required>
+                        <div class="input-group-append">
+                            <span class="input-group-text" onclick="togglePasswordVisibility('con_password', this)">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="showConfirmation()">Submit</button><br>
                 <a href="/login" class="btn btn-primary mt-3">Login</a>
             </form>
         {% else %}
@@ -83,9 +104,11 @@
     </div>
 
     <!-- Bootstrap JS and dependencies -->
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- FontAwesome for eye icon -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script>
         // Function to show confirmation modal
         function showConfirmation() {
@@ -115,6 +138,34 @@
             // Submit the form
             $('#registrationForm').submit();
         }
+
+        // Function to toggle password visibility
+        function togglePasswordVisibility(fieldId, icon) {
+            const field = document.getElementById(fieldId);
+            const type = field.type === 'password' ? 'text' : 'password';
+            field.type = type;
+            // Toggle eye slash icon
+            const eyeIcon = icon.querySelector('i');
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        }
     </script>
 </body>
 </html>
+
+
+
+<!-- 
+    Sql script:
+    CREATE TABLE registrations (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    fname NVARCHAR(50) NOT NULL,
+    lname NVARCHAR(50) NOT NULL,
+    email NVARCHAR(100) NOT NULL UNIQUE,
+    college NVARCHAR(100) NOT NULL,
+    mobile NVARCHAR(15) NOT NULL,
+    password NVARCHAR(255) NOT NULL,
+    con_password NVARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT GETDATE()
+);
+-->

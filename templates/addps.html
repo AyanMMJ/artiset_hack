@@ -64,8 +64,24 @@
             <div class="form-group">
                 <label for="problem-statement">Problem Statement:</label>
                 <textarea class="form-control" name="problem_statement" id="problem-statement" rows="5" placeholder="Describe the problem statement here..." required></textarea>
+                <br>
+                <label for="description">Descrption:</label>
+                <textarea class="form-control" name="desciption" id="description" rows="5" placeholder="Add the description here..." required></textarea>
+                <br>
+                <label for="constraints">Descrption:</label>
+                <textarea class="form-control" name="constraints" id="constraints" rows="5" placeholder="Add the constraints here..." required></textarea>
+                <br>
+                <label for="startdate">Start Date:</label>
+                <input type="date" name="startdate" id="startdate" required>
+                <label for="starttime">Start Time</label>
+                <input type="time" name="starttime" id="starttime" required>
+                <br><br>
+                <label for="enddate">End Date</label>
+                <input type="date" name="enddate" id="enddate" required>
+                <label for="endtime">End Time</label>
+                <input type="time" name="endtime" id="endtime" required>
             </div>
-            <button type="reset" class="btn btn-warning mb-3">Clear Problem Statement</button>
+            <button type="reset" class="btn btn-warning mb-3">Clear</button>
             
             <h2 class="mt-4">Test Cases</h2>
             <div id="test-cases-container">
@@ -82,7 +98,7 @@
                 </div>
             </div>
             <button type="button" class="btn btn-info mb-3" onclick="addTestCase()">Add Another Test Case</button>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-info mb-3">Submit</button>
         </form>
         <br>
         <a href="{{ url_for('homepage') }}" class="btn btn-secondary">Click Here to Go Back</a>

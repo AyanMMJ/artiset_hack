@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .countdown-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .countdown {
+      font-size: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="countdown-container">
+        <div class="countdown">
+          <div id="countdownDisplay"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Set the target date for the countdown (July 10, 2024 at 00:00:00)
+  const targetDate = new Date('July 11, 2024 00:00:00').getTime();
+
+  function showCountdown() {
+    // Get the current date and time
+    const now = new Date().getTime();
+
+    // Calculate the time difference between now and the target date
+    const difference = targetDate - now;
+
+    if (difference > 0) {
+      // Calculate days, hours, minutes, and seconds
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      // Display the countdown in the HTML element
+      document.getElementById('countdownDisplay').innerHTML = `
+        <div>Countdown until July 10, 2024:</div>
+        <div>The contest will start in ${days} days ${hours} hours ${minutes} minutes ${seconds} seconds</div>
+      `;
+    } else {
+      // If the target date has passed, display a message
+      document.getElementById('countdownDisplay').innerHTML = `
+        <div>Countdown ended on July 10, 2024.</div>
+      `;
+    }
+  }
+
+  // Update countdown every second
+  setInterval(showCountdown, 1000);
+
+  // Initial call to display countdown immediately
+  showCountdown();
+</script>
+
+</body>
+</html>

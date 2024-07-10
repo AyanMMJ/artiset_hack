@@ -77,13 +77,11 @@
         <div class="row">
           <div class="col-md-9">
             <div class="row">
-              {% for problem in problems %}
               <div class="col-md-4">
-                <strong>Name:</strong> {{problem.Problem_Statement}}<br>
+                <strong>Name:</strong> {{user}}<br>
                 <strong>Post:</strong> 635077997917<br>
-                <strong>ID:</strong> {{ problem._id}}
+                <strong>ID:</strong>
               </div>
-              {% endfor %}
             </div>
           </div>
         </div>
@@ -98,13 +96,12 @@
       <div class="col-md-6">
         {% for problem in problems %}
           <h2>Problem Statement</h2>
-          <p>{{ problem.Problem_Statement }}</p>
+          <p>{{ problem.problem_statement}}</p>
           <div class="col-md-10">
             {% for test_case in problem.test_cases %}
               <!-- Display test cases here -->
             {% endfor %}
           </div>
-
           <div class="mt-3">
             <h6>Description-Constraints</h6>
             <p>Here is the final page where I have all the details of a problem statement</p>
@@ -115,192 +112,97 @@
               You can test your function by calling it and assigning the result to a variable named <strong>result</strong>.</p>
               <p>Example code:</p>
               <pre>
-<code>def is_palindrome(s):
-    # Your code here
+                <code>def is_palindrome(s):
+                    # Your code here
 
-# Example call
-result = is_palindrome("A man a plan a canal Panama")</code>
+                # Example call
+                result = is_palindrome("A man a plan a canal Panama")</code>
               </pre>
-            </div>
-          </div>
-          <br><br><br>
-          <div class="col-md-10">
-            <div class="card">
-              <div class="card-header text-center">
-                <h5>Sample Input/Output</h5>
-              </div>
-              <div class="card-body">
-                {% for test_case in problem.test_cases %}
-                  {% if loop.index <= 2 %}
-                    <div class="row mb-3">
-                      <div class="col">
-                        <h6>Sample Input:</h6>
-                        <p>{{ test_case.input }}</p>
-                      </div>
-                    </div>
-                    <div class="row mb-3">
-                      <div class="col">
-                        <h6>Sample Output:</h6>
-                        <p>{{ test_case.output }}</p>
-                      </div>
-                    </div>
-                  {% endif %}
-                {% endfor %}
-              </div>
             </div>
           </div>
         {% endfor %}
       </div>
-
-      <div class="col-md-6 animated-fadeIn">
+      <!-- add the section here -->
+       {% for problem in problems%}
+      <div class="col-md-6 animated-fadeIn  ">
         <div class="card">
           <div class="card-header text-center">
-            <h5>Submit Your Code</h5>
+            <h5>Sample Input/Output</h5>
           </div>
           <div class="card-body">
-            <div id="code-editor" style="height: 300px; width: 100%;"></div>
-            <div class="form-group mt-3">
-              <select id="language" class="form-select">
-                <option value="python">Python</option>
-                <option value="java">Java</option>
-                <option value="javascript">JavaScript</option>
-              </select>
-            </div>
-            <br>  
-            <button id="run-button" class="btn btn-primary">Run Code</button>
-            <button id="submit-button" class="btn btn-primary">Submit</button>
-
-            <div id="output" class="mt-3"></div>
-            <div id="test-cases" class="mt-3"></div>
-            <div id="score" class="mt-3"></div>
+            {% for test_case in problem.test_cases %}
+              {% if loop.index <= 2 %}
+                <div class="row mb-3">
+                  <div class="col">
+                    <h6>Sample Input:</h6>
+                    <p>{{ test_case.input }}</p>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col">
+                    <h6>Sample Output:</h6>
+                    <p>{{ test_case.output }}</p>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
           </div>
         </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="col-md-12 animated-fadeIn">
+    <div class="card">
+      <div class="card-header text-center">
+        <h5>Submit Your Code</h5>
+      </div>
+      <div class="card-body">
+        <div id="code-editor" style="height: 300px; width: 100%;"></div>
+        <div class="form-group mt-3">
+          <select id="language" class="form-select">
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="javascript">JavaScript</option>
+          </select>
+        </div>
+        <br>  
+        <button id="run-button" class="btn btn-primary">Run Code</button>
+        <button id="submit-button" class="btn btn-primary">Submit</button>
+  
+        <div id="output" class="mt-3"></div>
+        <div id="test-cases" class="mt-3"></div>
+        <div id="score" class="mt-3"></div>
       </div>
     </div>
   </div>
 </section>
-
-<footer class="mt-5 bg-dark text-white py-3">
+<footer class="mt-5 bg-dark text-white py-3 animate__animated animate__fadeIn">
   <div class="container text-center">
     <p>&copy; 2023 Artiset Solutions Pvt. Ltd.</p>
   </div>
 </footer>
-
-<!-- <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Initialize CodeMirror
-    const codeEditor = CodeMirror(document.getElementById('code-editor'), {
-        mode: 'python', // Default mode, changeable by language selector
-        lineNumbers: true,
-        indentUnit: 4,
-        tabSize: 4,
-        indentWithTabs: false,
-        lineWrapping: true,
-        value: '# Write your code here\n',
-        theme: 'default', // Change as needed
-        extraKeys: { 'Tab': 'indentMore', 'Shift-Tab': 'indentLess' },
-    });
-
-    const outputElement = document.getElementById('output');
-    const languageSelector = document.getElementById('language');
-    const testCasesElement = document.getElementById('test-cases');
-    const scoreElement = document.getElementById('score');
-
-    languageSelector.addEventListener('change', function() {
-        const mode = languageSelector.value;
-        let cmMode;
-        if (mode === 'python') cmMode = 'python';
-        else if (mode === 'javascript') cmMode = 'javascript';
-        else if (mode === 'java') cmMode = 'text/x-java';
-        codeEditor.setOption('mode', cmMode);
-    });
-
-    document.getElementById('run-button').addEventListener('click', function () {
-        const userCode = codeEditor.getValue();
-        const language = languageSelector.value;
-
-        // Clear the output display before showing new results
-        outputElement.innerHTML = '';
-
-        fetch('/execute_code', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ code: userCode, language: language })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.output) {
-                outputElement.innerHTML = `<pre>${data.output}</pre>`;
-            } else if (data.error) {
-                outputElement.innerHTML = `<pre class="text-danger">${data.error}</pre>`;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            outputElement.innerHTML = `<pre class="text-danger">An error occurred while processing your request.</pre>`;
-        });
-    });
-
-    document.getElementById('submit-button').addEventListener('click', function () {
-        const userCode = codeEditor.getValue();
-        const language = languageSelector.value;
-
-        // Clear the previous test cases and score
-        testCasesElement.innerHTML = '';
-        scoreElement.innerHTML = '';
-
-        fetch('/check_code', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ code: userCode, language: language })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.results) {
-                let score = 0;
-                data.results.forEach((result, index) => {
-                    const testCaseOutput = `<div>Test Case ${index + 1}: ${result.status}</div>`;
-                    testCasesElement.innerHTML += testCaseOutput;
-                    if (result.status === 'Passed') score++;
-                });
-                scoreElement.innerHTML = `<div>Your Score: ${score}/${data.results.length}</div>`;
-            } else if (data.error) {
-                testCasesElement.innerHTML = `<pre class="text-danger">${data.error}</pre>`;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            testCasesElement.innerHTML = `<pre class="text-danger">An error occurred while processing your request.</pre>`;
-        });
-    });
-});
-
-fetch('/execute_code', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ code: userCode, language: language })
-})
-.then(response => response.json())
-.then(data => {
-    if (data.output) {
-        outputElement.innerHTML = `<pre>${data.output}</pre>`;
-    } else if (data.error) {
-        outputElement.innerHTML = `<pre class="text-danger">${data.error}</pre>`;
-    }
-})
-.catch(error => {
-    console.error('Error:', error);
-    outputElement.innerHTML = `<pre class="text-danger">An error occurred while processing your request.</pre>`;
-});
-
-</script> -->
 <script>
+    document.addEventListener('copy', function(e) {
+    e.preventDefault();
+    console.log('Copying content is disabled on this page.');
+    });
+
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        console.log('Cutting content is disabled on this page.');
+    });
+
+      document.addEventListener('DOMContentLoaded', function() {
+          document.addEventListener('paste', function(e) {
+              e.preventDefault();
+              console.log('Pasting content is disabled on this page.');
+          });
+      });
+    window.addEventListener('beforeunload', function(e) {
+        e.preventDefault();
+        e.returnValue = '';
+    });
+
   document.addEventListener('DOMContentLoaded', function () {
       // Initialize CodeMirror
       const codeEditor = CodeMirror(document.getElementById('code-editor'), {
@@ -396,3 +298,26 @@ fetch('/execute_code', {
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
