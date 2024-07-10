@@ -1,23 +1,25 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim
+# Use the official Python base image
+FROM python:3.9-slim
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy requirements.txt to the working directory
+# Copy the requirements file into the container
 COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install the Python dependencies
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /app
 COPY . .
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
+# Set environment variables
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
 
-# Define environment variable (if necessary)
-# ENV NAME World
+# Expose port 5000 to the outside world
+EXPOSE 5000
 
-# Run Gunicorn with 4 worker processes (adjust as necessary)
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "app:app"]
+# Run the application using gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]

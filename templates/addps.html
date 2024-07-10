@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Problem Statement</title>
+    <!-- Use a single version of Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Animate.css for easy animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+    <style>
+        .navbar-brand img {
+            max-height: 40px;
+            margin-right: 10px;
+        }
+        .header, .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+        .footer p {
+            margin: 0;
+        }
+        .cancel-button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Company Logo">
+                Simple Code Interpreter
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/addps">ADD PS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/editor">Go to Editor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/problems">Solve Problems</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/homepage">Home</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Enter Problem Statement and Test Cases</h1>
+        <form id="problem-form" method="POST" action="{{ url_for('submit_problem') }}">
+            <div class="form-group">
+                <label for="problem-statement">Problem Statement:</label>
+                <textarea class="form-control" name="problem_statement" id="problem-statement" rows="5" placeholder="Describe the problem statement here..." required></textarea>
+            </div>
+            <button type="reset" class="btn btn-warning mb-3">Clear Problem Statement</button>
+            
+            <h2 class="mt-4">Test Cases</h2>
+            <div id="test-cases-container">
+                <div class="form-row test-case-group mb-2">
+                    <div class="col-md-5 mb-3">
+                        <input type="text" class="form-control" name="test_input[]" placeholder="Test case input" required />
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <input type="text" class="form-control" name="expected_output[]" placeholder="Expected output" required />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger" onclick="removeTestCase(this)">Remove</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-info mb-3" onclick="addTestCase()">Add Another Test Case</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <br>
+        <a href="{{ url_for('homepage') }}" class="btn btn-secondary">Click Here to Go Back</a>
+    </div>
+
+    <footer class="footer mt-5">
+        <p>&copy; 2024 Your Company. All rights reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function addTestCase() {
+            const container = document.getElementById('test-cases-container');
+            const newTestCase = document.createElement('div');
+            newTestCase.className = 'form-row test-case-group mb-2';
+            newTestCase.innerHTML = `
+                <div class="col-md-5 mb-3">
+                    <input type="text" class="form-control" name="test_input[]" placeholder="Test case input" required />
+                </div>
+                <div class="col-md-5 mb-3">
+                    <input type="text" class="form-control" name="expected_output[]" placeholder="Expected output" required />
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger" onclick="removeTestCase(this)">Remove</button>
+                </div>
+            `;
+            container.appendChild(newTestCase);
+        }
+
+        function removeTestCase(button) {
+            const testCaseGroup = button.parentNode.parentNode;
+            testCaseGroup.remove();
+        }
+    </script>
+</body>
+</html>
